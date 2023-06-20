@@ -45,6 +45,10 @@ public class Book {
 	@JoinColumn(name="user_id")
 	private User user;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="borrower_id")
+	private User borrower;
+	
 	public Book() {}
 	
 	public Long getId() {
@@ -93,6 +97,14 @@ public class Book {
 
 	public Date getUpdatedAt() {
 		return updatedAt;
+	}
+
+	public User getBorrower() {
+		return borrower;
+	}
+
+	public void setBorrower(User borrower) {
+		this.borrower = borrower;
 	}
 
 	@PrePersist

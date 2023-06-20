@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.chris.bookclub.models.Book;
 import com.chris.bookclub.services.BookService;
+import com.chris.bookclub.services.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
 public class BookController {
 	
 	private final BookService bookServ;
+	private final UserService userServ;
 	
-	public BookController(BookService bookServ) {
+	public BookController(BookService bookServ, UserService userServ) {
 		this.bookServ = bookServ;
+		this.userServ = userServ;
 	}
 	
 	@RequestMapping("/books/new")
@@ -66,5 +70,23 @@ public class BookController {
 		bookServ.delete(id);
 		return "redirect:/welcome";
 	}
+	
+	@RequestMapping("/books/{id}/borrow")
+	public String borrowBook(@PathVariable("id") Long id, HttpSession session) {
+		Book book = bookServ.getOne(id);
+		book.setBorrower(userServ.getOne((Long)session.getAttribute("user_id")));
+		bookServ.update(book);
+		return "redirect:/welcome";
+	}
+	
+	@RequestMapping("/books/{id}/return")
+	public String returnBook(@PathVariable("id") Long id, HttpSession session) {
+		Book book = bookServ.getOne(id);
+		book.setBorrower(null);
+		bookServ.update(book);
+		return "redirect:/welcome";
+	}
+	
+
 
 }

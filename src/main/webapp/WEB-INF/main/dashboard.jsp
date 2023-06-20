@@ -33,26 +33,73 @@
 				<th>ID</th>
 				<th>Title</th>
 				<th>Author Name</th>
-				<th>Posted By</th>
+				<th>Owner</th>
 				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:forEach var="eachBook" items="${books}">
-				<tr>
-					<td><c:out value="${eachBook.id}" /></td>
-					<td><a href="/books/${eachBook.id}"><c:out
-								value="${eachBook.title}" /></a></td>
-					<td><c:out value="${eachBook.author}" /></td>
-					<td><c:out value="${eachBook.user.name}" /></td>
-					<td><c:if test="${user_id == eachBook.user.id}">
-							<a href="/books/edit/${eachBook.id}">Edit</a>
-							<form action="/books/${eachBook.id}" method="post">
-								<input type="hidden" name="_method" value="delete" /> <input
-									type="submit" value="delete">
-							</form>
-						</c:if></td>
-				</tr>
+
+				<c:if test="${user_id != eachBook.borrower.id }">
+					<tr>
+						<td><c:out value="${eachBook.id}" /></td>
+						<td><a href="/books/${eachBook.id}"><c:out
+									value="${eachBook.title}" /></a></td>
+						<td><c:out value="${eachBook.author}" /></td>
+						<td><c:out value="${eachBook.user.name}" /></td>
+						<c:if test="${user_id == eachBook.user.id}">
+							<td><a href="/books/edit/${eachBook.id}">Edit</a>
+								<form action="/books/${eachBook.id}" method="post">
+									<input type="hidden" name="_method" value="delete" /> <input
+										type="submit" value="delete">
+								</form></td>
+						</c:if>
+						<c:if test="${user_id != eachBook.user.id}">
+							<td><a href="/books/${eachBook.id}/borrow">Borrow</a></td>
+						</c:if>
+
+
+					</tr>
+				</c:if>
+
+
+			</c:forEach>
+		</tbody>
+	</table>
+
+	<h3>Books I'm Borrowing</h3>
+
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Title</th>
+				<th>Author Name</th>
+				<th>Owner</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="eachBook" items="${books}">
+
+				<c:if test="${user_id == eachBook.borrower.id}">
+					<tr>
+						<td><c:out value="${eachBook.id}" /></td>
+						<td><a href="/books/${eachBook.id}"><c:out
+									value="${eachBook.title}" /></a></td>
+						<td><c:out value="${eachBook.author}" /></td>
+						<td><c:out value="${eachBook.user.name}" /></td>
+
+						<c:if test="${user_id != eachBook.user.id}">
+							<td><a href="/books/${eachBook.id}/return">Return</a></td>
+						</c:if>
+
+
+					</tr>
+				</c:if>
+
+
+
 			</c:forEach>
 		</tbody>
 	</table>
